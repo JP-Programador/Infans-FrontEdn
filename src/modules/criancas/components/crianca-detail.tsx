@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 
-import { PageHeader } from "@/components/shared/page-header"
+import { PageTitle } from "@/components/ui/page-title"
 import { Historico } from "@/modules/registros/components/historico"
 import { RegistroForm } from "@/modules/registros/components/registro-form"
 
@@ -24,7 +24,7 @@ export function CriancaDetail({ criancaId }: { criancaId: string }) {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <PageTitle
         title={crianca.nome}
         description={idade + (crianca.responsavel ? ` · Responsável: ${crianca.responsavel}` : "")}
       />

@@ -2,8 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query"
 
-import { PageHeader } from "@/components/shared/page-header"
 import { Badge } from "@/components/ui/badge"
+import { PageTitle } from "@/components/ui/page-title"
 import { TurmaFormDialog } from "@/modules/turmas/components/turma-form-dialog"
 import { TurmasList } from "@/modules/turmas/components/turmas-list"
 
@@ -23,7 +23,7 @@ export function EscolaDetail({ escolaId }: { escolaId: string }) {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <PageTitle
         title={escola.nome}
         description={[escola.cidade, escola.estado].filter(Boolean).join(" - ") || undefined}
         action={

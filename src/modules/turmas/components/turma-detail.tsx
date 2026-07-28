@@ -2,8 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query"
 
-import { PageHeader } from "@/components/shared/page-header"
 import { Badge } from "@/components/ui/badge"
+import { PageTitle } from "@/components/ui/page-title"
 import { CriancaFormDialog } from "@/modules/criancas/components/crianca-form-dialog"
 import { CriancasList } from "@/modules/criancas/components/criancas-list"
 
@@ -22,7 +22,7 @@ export function TurmaDetail({ turmaId }: { turmaId: string }) {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <PageTitle
         title={turma.nome}
         action={
           <div className="flex gap-2">

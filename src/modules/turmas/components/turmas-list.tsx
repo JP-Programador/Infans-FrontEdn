@@ -1,10 +1,10 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { Users } from "lucide-react"
+import { ClassIcon } from "@/design-system/icons"
 import Link from "next/link"
 
-import { EmptyState } from "@/components/shared/empty-state"
+import { EmptyState } from "@/components/ui/empty-state"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -30,7 +30,7 @@ export function TurmasList({ escolaId }: { escolaId: string }) {
   if (!turmas || turmas.length === 0) {
     return (
       <EmptyState
-        icon={Users}
+        icon={ClassIcon}
         title="Nenhuma turma cadastrada"
         description="Crie uma turma para começar a cadastrar as crianças."
       />

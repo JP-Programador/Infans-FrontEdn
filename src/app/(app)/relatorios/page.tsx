@@ -1,10 +1,10 @@
-import { PageHeader } from "@/components/shared/page-header"
+import { PageTitle } from "@/components/ui/page-title"
 import { FluxoRelatorio } from "@/modules/relatorios/components/fluxo-relatorio"
 
 export default function RelatoriosPage() {
   return (
     <div>
-      <PageHeader
+      <PageTitle
         title="Relatórios"
         description="Selecione uma criança e um período para consolidar os registros com a IA."
       />

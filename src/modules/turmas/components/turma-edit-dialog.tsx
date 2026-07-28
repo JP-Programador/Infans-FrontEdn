@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Pencil } from "lucide-react"
+import { EditIcon } from "@/design-system/icons"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -59,7 +59,7 @@ export function TurmaEditDialog({ turma }: { turma: Turma }) {
       <DialogTrigger
         render={
           <Button variant="outline" className="gap-2">
-            <Pencil className="size-4" />
+            <EditIcon className="size-4" />
             Editar
           </Button>
         }

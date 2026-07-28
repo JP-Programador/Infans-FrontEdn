@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Plus } from "lucide-react"
+import { AddIcon } from "@/design-system/icons"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -63,7 +63,7 @@ export function CriancaFormDialog({ turmaId }: { turmaId: string }) {
       <DialogTrigger
         render={
           <Button className="gap-2">
-            <Plus className="size-4" />
+            <AddIcon className="size-4" />
             Nova criança
           </Button>
         }

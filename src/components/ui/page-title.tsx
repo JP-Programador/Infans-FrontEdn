@@ -1,4 +1,4 @@
-export function PageHeader({
+export function PageTitle({
   title,
   description,
   action,

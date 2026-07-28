@@ -1,10 +1,10 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { Baby } from "lucide-react"
+import { ChildIcon } from "@/design-system/icons"
 import Link from "next/link"
 
-import { EmptyState } from "@/components/shared/empty-state"
+import { EmptyState } from "@/components/ui/empty-state"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -29,7 +29,7 @@ export function CriancasList({ turmaId }: { turmaId: string }) {
   if (!criancas || criancas.length === 0) {
     return (
       <EmptyState
-        icon={Baby}
+        icon={ChildIcon}
         title="Nenhuma criança cadastrada"
         description="Cadastre as crianças desta turma para começar os registros pedagógicos."
       />

@@ -72,11 +72,25 @@ export type CriancaAlerta = {
   dias_sem_registro: number | null
 }
 
+export type RegistrosPorSemana = {
+  semana_inicio: string
+  quantidade: number
+}
+
+export type TurmaResumo = {
+  turma_id: string
+  turma_nome: string
+  escola_nome: string
+  quantidade_criancas: number
+}
+
 export type Dashboard = {
   quantidade_criancas: number
   quantidade_registros: number
   quantidade_relatorios: number
   ultimos_registros: RegistroResumo[]
   criancas_sem_registro_recente: CriancaAlerta[]
+  registros_por_semana: RegistrosPorSemana[]
+  turmas: TurmaResumo[]
   ultimo_login: string | null
 }

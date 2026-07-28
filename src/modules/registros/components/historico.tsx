@@ -1,10 +1,10 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { FileSearch } from "lucide-react"
+import { EmptySearchIcon } from "@/design-system/icons"
 import { useState } from "react"
 
-import { EmptyState } from "@/components/shared/empty-state"
+import { EmptyState } from "@/components/ui/empty-state"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -70,7 +70,7 @@ export function Historico({ criancaId }: { criancaId: string }) {
         </div>
       ) : !registros || registros.length === 0 ? (
         <EmptyState
-          icon={FileSearch}
+          icon={EmptySearchIcon}
           title="Nenhum registro encontrado"
           description="Ajuste os filtros ou adicione um novo registro acima."
         />
