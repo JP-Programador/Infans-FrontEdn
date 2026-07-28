@@ -14,6 +14,7 @@ export {
   Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
   Clock as ClockIcon,
+  Copy as CopyIcon,
   FileSearch as EmptySearchIcon,
   FileText as ReportIcon,
   Inbox as EmptyIcon,

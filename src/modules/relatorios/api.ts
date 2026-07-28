@@ -15,6 +15,13 @@ export function gerarConsolidacao(dados: GerarRelatorioInput) {
   return apiFetch<RelatorioPreview>("/api/v1/relatorios/gerar", { method: "POST", body: dados })
 }
 
+export type ConsolidarInput = { crianca_id: string; data_inicio: string; data_fim: string }
+export type ConsolidarOutput = { texto_consolidado: string; quantidade_observacoes: number }
+
+export function consolidarRelatorio(dados: ConsolidarInput) {
+  return apiFetch<ConsolidarOutput>("/api/v1/relatorios/consolidar", { method: "POST", body: dados })
+}
+
 export function salvarRelatorio(dados: SalvarRelatorioInput) {
   return apiFetch<Relatorio>("/api/v1/relatorios", { method: "POST", body: dados })
 }
