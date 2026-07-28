@@ -20,14 +20,32 @@ Abra `http://localhost:3000`.
 
 ```
 src/
-├── app/            # rotas (App Router)
-├── modules/        # 1 pasta por domínio (auth, escolas, turmas, criancas, ...)
+├── app/               # rotas (App Router)
+├── modules/           # 1 pasta por domínio (auth, escolas, turmas, criancas, ...)
+├── design-system/     # tokens tipados: colors, typography, spacing, shadows,
+│                      # radius, animations, icons, theme.ts (agregador)
 ├── components/
-│   ├── ui/         # shadcn/ui
-│   └── shared/     # componentes reutilizáveis entre módulos
-├── providers/       # QueryProvider (TanStack Query), AuthProvider (JWT em localStorage)
-└── lib/              # api-client (fetch com Bearer token), auth-storage, types, utils
+│   ├── ui/            # biblioteca de componentes (shadcn/ui + primitivos próprios:
+│   │                  # Modal, Sidebar, Navbar, Header, PageTitle, StatCard, Loading, EmptyState)
+│   └── shared/        # composições específicas do app (AppShell, RequireAuth, GuestOnly, ConfirmDialog)
+├── providers/          # QueryProvider (TanStack Query), AuthProvider (JWT em localStorage)
+└── lib/                 # api-client (fetch com Bearer token), auth-storage, types, utils
 ```
+
+### Design system
+
+Os tokens visuais (cores, tipografia, espaçamento, sombras, raio, animações, ícones)
+vivem em `src/design-system/` — importe de lá (ou de `@/design-system` via o barrel
+`index.ts`) sempre que precisar de um valor de design em código JS/TS (gráficos,
+estilos inline, mapeamento de ícones). Os componentes visuais continuam estilizados
+via classes Tailwind + as CSS variables de `src/app/globals.css`, já que o Tailwind v4
+é CSS-first e não lê tokens de um arquivo `.ts`. **Os dois arquivos devem ficar em
+sincronia**: `design-system/colors.ts` documenta os mesmos valores hexadecimais que
+`globals.css` define como CSS variables — ao mudar uma cor, atualize os dois.
+
+Ícones: importe sempre de `@/design-system/icons` (que reexporta lucide-react com
+nomes semânticos, ex. `SchoolIcon`, `AddIcon`) em vez de `lucide-react` diretamente —
+troca de biblioteca de ícones no futuro exige mudar só esse arquivo.
 
 ## Autenticação
 
