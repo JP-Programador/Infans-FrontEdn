@@ -49,31 +49,30 @@ export function PlanejamentoResumo({ planejamentoId }: { planejamentoId: string 
 
       <Card>
         <CardContent className="space-y-6 pt-6">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <EstatCard
               label="Dias preenchidos"
               valor={`${planejamento.quantidade_dias_preenchidos}/${planejamento.quantidade_dias}`}
             />
-            <EstatCard label="Objetivos definidos" valor={planejamento.quantidade_objetivos} />
-            <EstatCard label="Materiais citados" valor={planejamento.materiais_citados.length} />
+            <EstatCard label="Colunas configuradas" valor={planejamento.colunas.length} />
             <EstatCard
               label="Status"
               valor={planejamento.status === "concluido" ? "Concluído" : "Rascunho"}
             />
           </div>
 
-          {planejamento.materiais_citados.length > 0 && (
-            <div>
-              <p className="mb-2 text-sm font-medium text-foreground">Materiais citados</p>
-              <div className="flex flex-wrap gap-1.5">
-                {planejamento.materiais_citados.map((material) => (
-                  <Badge key={material} variant="outline">
-                    {material}
+          <div>
+            <p className="mb-2 text-sm font-medium text-foreground">Colunas</p>
+            <div className="flex flex-wrap gap-1.5">
+              {[...planejamento.colunas]
+                .sort((a, b) => a.ordem - b.ordem)
+                .map((coluna) => (
+                  <Badge key={coluna.id} variant="outline">
+                    {coluna.nome}
                   </Badge>
                 ))}
-              </div>
             </div>
-          )}
+          </div>
 
           <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4">
             <Link href={`/planejamentos/${planejamentoId}/visualizar`}>

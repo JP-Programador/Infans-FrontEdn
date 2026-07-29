@@ -8,6 +8,8 @@ export type { LucideIcon } from "lucide-react"
 
 export {
   AlertTriangle as AlertIcon,
+  ArrowDown as ArrowDownIcon,
+  ArrowUp as ArrowUpIcon,
   Baby as ChildIcon,
   Bell as NotificationIcon,
   Calendar as CalendarIcon,

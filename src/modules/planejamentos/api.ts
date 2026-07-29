@@ -2,8 +2,9 @@ import { apiDownload, apiFetch } from "@/lib/api-client"
 import type {
   Planejamento,
   PlanejamentoCard,
+  PlanejamentoColuna,
   PlanejamentoDetalhe,
-  PlanejamentoItem,
+  PlanejamentoDia,
   PlanejamentoVisualizacao,
   RotuloTurma,
 } from "@/lib/types"
@@ -15,18 +16,10 @@ export type PlanejamentoInput = {
   data_inicio: string
   data_fim: string
   rotulo_turma: RotuloTurma
+  colunas?: string[]
+  modelo_id?: string
 }
 export type PlanejamentoUpdateInput = { titulo?: string; status?: "rascunho" | "concluido" }
-export type PlanejamentoItemUpdateInput = Partial<
-  Pick<
-    PlanejamentoItem,
-    | "objetivo_aprendizagem"
-    | "atividade_titulo"
-    | "atividade_descricao"
-    | "materiais"
-    | "organizacao_tempo_espaco"
-  >
->
 
 export type PlanejamentoListaOutput = {
   items: PlanejamentoCard[]
@@ -42,7 +35,7 @@ export function listarPlanejamentos(page = 1, pageSize = 20) {
 }
 
 export function criarPlanejamento(dados: PlanejamentoInput) {
-  return apiFetch<Planejamento>("/api/v1/planejamentos", { method: "POST", body: dados })
+  return apiFetch<PlanejamentoDetalhe>("/api/v1/planejamentos", { method: "POST", body: dados })
 }
 
 export function obterPlanejamento(id: string) {
@@ -58,23 +51,63 @@ export function excluirPlanejamento(id: string) {
 }
 
 export function duplicarPlanejamento(id: string) {
-  return apiFetch<Planejamento>(`/api/v1/planejamentos/${id}/duplicar`, { method: "POST" })
+  return apiFetch<PlanejamentoDetalhe>(`/api/v1/planejamentos/${id}/duplicar`, { method: "POST" })
 }
 
-export function listarItensPlanejamento(id: string) {
-  return apiFetch<PlanejamentoItem[]>(`/api/v1/planejamentos/${id}/itens`)
+// --------------------------------------------------------------------- colunas
+
+export function listarColunas(planejamentoId: string) {
+  return apiFetch<PlanejamentoColuna[]>(`/api/v1/planejamentos/${planejamentoId}/colunas`)
 }
 
-export function atualizarItemPlanejamento(
-  planejamentoId: string,
-  itemId: string,
-  dados: PlanejamentoItemUpdateInput
-) {
-  return apiFetch<PlanejamentoItem>(
-    `/api/v1/planejamentos/${planejamentoId}/itens/${itemId}`,
-    { method: "PUT", body: dados }
+export function adicionarColuna(planejamentoId: string, nome: string) {
+  return apiFetch<PlanejamentoColuna>(`/api/v1/planejamentos/${planejamentoId}/colunas`, {
+    method: "POST",
+    body: { nome },
+  })
+}
+
+export function renomearColuna(planejamentoId: string, colunaId: string, nome: string) {
+  return apiFetch<PlanejamentoColuna>(
+    `/api/v1/planejamentos/${planejamentoId}/colunas/${colunaId}`,
+    { method: "PUT", body: { nome } }
   )
 }
+
+export function excluirColuna(planejamentoId: string, colunaId: string) {
+  return apiFetch<void>(`/api/v1/planejamentos/${planejamentoId}/colunas/${colunaId}`, {
+    method: "DELETE",
+  })
+}
+
+export function reordenarColunas(planejamentoId: string, ordem: string[]) {
+  return apiFetch<PlanejamentoColuna[]>(
+    `/api/v1/planejamentos/${planejamentoId}/colunas/reordenar`,
+    { method: "PUT", body: { ordem } }
+  )
+}
+
+export function salvarColunasComoModelo(planejamentoId: string, nome: string) {
+  return apiFetch(`/api/v1/planejamentos/${planejamentoId}/colunas/salvar-como-modelo`, {
+    method: "POST",
+    body: { nome },
+  })
+}
+
+// ------------------------------------------------------------------------ dias
+
+export function listarDias(planejamentoId: string) {
+  return apiFetch<PlanejamentoDia[]>(`/api/v1/planejamentos/${planejamentoId}/dias`)
+}
+
+export function atualizarDia(planejamentoId: string, diaId: string, celulas: Record<string, string>) {
+  return apiFetch<PlanejamentoDia>(`/api/v1/planejamentos/${planejamentoId}/dias/${diaId}`, {
+    method: "PUT",
+    body: { celulas },
+  })
+}
+
+// ------------------------------------------------------------- visualização/export
 
 export function obterVisualizacaoPlanejamento(id: string) {
   return apiFetch<PlanejamentoVisualizacao>(`/api/v1/planejamentos/${id}/visualizacao`)

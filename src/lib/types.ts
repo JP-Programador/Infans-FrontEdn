@@ -87,6 +87,12 @@ export type TurmaResumo = {
 export type StatusPlanejamento = "rascunho" | "concluido"
 export type RotuloTurma = "turma" | "agrupamento"
 
+export type PlanejamentoColuna = {
+  id: string
+  nome: string
+  ordem: number
+}
+
 export type Planejamento = {
   id: string
   professora_id: string
@@ -99,6 +105,7 @@ export type Planejamento = {
   rotulo_turma: RotuloTurma
   created_at: string
   updated_at: string
+  colunas: PlanejamentoColuna[]
 }
 
 export type PlanejamentoCard = Planejamento & {
@@ -108,30 +115,18 @@ export type PlanejamentoCard = Planejamento & {
   quantidade_dias_preenchidos: number
 }
 
-export type PlanejamentoDetalhe = PlanejamentoCard & {
-  quantidade_objetivos: number
-  materiais_citados: string[]
-}
+export type PlanejamentoDetalhe = PlanejamentoCard
 
-export type PlanejamentoItem = {
+/** celulas: mapa coluna_id -> valor escrito pela professora naquele dia. */
+export type PlanejamentoDia = {
   id: string
-  planejamento_id: string
   data: string
-  objetivo_aprendizagem: string
-  atividade_titulo: string
-  atividade_descricao: string
-  materiais: string
-  organizacao_tempo_espaco: string
-  ordem: number
+  celulas: Record<string, string>
 }
 
 export type PlanejamentoVisualizacaoLinha = {
   data: string
-  objetivo_aprendizagem: string
-  atividade_titulo: string
-  atividade_descricao: string
-  materiais: string
-  organizacao_tempo_espaco: string
+  valores: Record<string, string>
 }
 
 export type PlanejamentoVisualizacao = {
@@ -142,7 +137,16 @@ export type PlanejamentoVisualizacao = {
   data_inicio: string
   data_fim: string
   status: StatusPlanejamento
+  colunas: PlanejamentoColuna[]
   linhas: PlanejamentoVisualizacaoLinha[]
+}
+
+export type ModeloPlanejamento = {
+  id: string
+  nome: string
+  colunas: string[]
+  created_at: string
+  updated_at: string
 }
 
 export type Dashboard = {

@@ -12,12 +12,17 @@ export default function PlanejamentosPage() {
         title="Planejamento Pedagógico Semanal"
         description="Cronogramas semanais de atividades, preenchidos dia a dia."
         action={
-          <Link href="/planejamentos/novo">
-            <Button className="gap-2">
-              <AddIcon className="size-4" />
-              Novo planejamento
-            </Button>
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/planejamentos/modelos">
+              <Button variant="outline">Modelos</Button>
+            </Link>
+            <Link href="/planejamentos/novo">
+              <Button className="gap-2">
+                <AddIcon className="size-4" />
+                Novo planejamento
+              </Button>
+            </Link>
+          </div>
         }
       />
       <PlanejamentosList />

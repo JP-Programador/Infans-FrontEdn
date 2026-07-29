@@ -1,21 +1,22 @@
 import { formatarDataBR } from "@/lib/utils"
 import type { PlanejamentoVisualizacao } from "@/lib/types"
 
-/** Tabela somente leitura, no padrão pedagógico usado pelas professoras — apenas
- * para conferência e exportação, não é editável aqui. */
+/** Tabela somente leitura, gerada dinamicamente a partir das colunas
+ * configuradas pela professora — apenas para conferência e exportação. */
 export function TabelaPlanejamento({ visualizacao }: { visualizacao: PlanejamentoVisualizacao }) {
+  const colunas = [...visualizacao.colunas].sort((a, b) => a.ordem - b.ordem)
+
   return (
     <div className="overflow-x-auto rounded-xl ring-1 ring-foreground/10">
       <table className="w-full min-w-[900px] border-collapse text-sm">
         <thead>
           <tr className="bg-primary text-primary-foreground">
             <th className="p-3 text-left font-medium">Data</th>
-            <th className="p-3 text-left font-medium">
-              Objetivo de aprendizagem / Espera-se que as crianças possam
-            </th>
-            <th className="p-3 text-left font-medium">Atividades / Estratégias / Interações</th>
-            <th className="p-3 text-left font-medium">Materiais</th>
-            <th className="p-3 text-left font-medium">Organização / Tempo / Espaço</th>
+            {colunas.map((coluna) => (
+              <th key={coluna.id} className="p-3 text-left font-medium">
+                {coluna.nome}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -24,25 +25,11 @@ export function TabelaPlanejamento({ visualizacao }: { visualizacao: Planejament
               <td className="p-3 align-top font-medium whitespace-nowrap">
                 {formatarDataBR(linha.data)}
               </td>
-              <td className="p-3 align-top whitespace-pre-wrap text-foreground">
-                {linha.objetivo_aprendizagem || "—"}
-              </td>
-              <td className="p-3 align-top whitespace-pre-wrap text-foreground">
-                {!linha.atividade_titulo && !linha.atividade_descricao ? (
-                  "—"
-                ) : (
-                  <>
-                    {linha.atividade_titulo && <p className="font-semibold">{linha.atividade_titulo}</p>}
-                    {linha.atividade_descricao && <p>{linha.atividade_descricao}</p>}
-                  </>
-                )}
-              </td>
-              <td className="p-3 align-top whitespace-pre-wrap text-foreground">
-                {linha.materiais || "—"}
-              </td>
-              <td className="p-3 align-top whitespace-pre-wrap text-foreground">
-                {linha.organizacao_tempo_espaco || "—"}
-              </td>
+              {colunas.map((coluna) => (
+                <td key={coluna.id} className="p-3 align-top whitespace-pre-wrap text-foreground">
+                  {linha.valores[coluna.id] || "—"}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>

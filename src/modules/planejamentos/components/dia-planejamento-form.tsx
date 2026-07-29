@@ -6,36 +6,16 @@ import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ChevronLeftIcon, ChevronRightIcon } from "@/design-system/icons"
+import { ChevronLeftIcon, ChevronRightIcon, SettingsIcon } from "@/design-system/icons"
 import { formatarDataBR } from "@/lib/utils"
-import type { PlanejamentoItem } from "@/lib/types"
 
-import { atualizarItemPlanejamento, listarItensPlanejamento } from "../api"
+import { atualizarDia, listarDias, obterPlanejamento } from "../api"
 import { AutosaveIndicator } from "./autosave-indicator"
+import { EditarColunasDialog } from "./editar-colunas-dialog"
 import { ProgressoPlanejamento } from "./progresso-planejamento"
 import { useAutosave } from "../use-autosave"
-
-type CamposEditaveis = Pick<
-  PlanejamentoItem,
-  | "objetivo_aprendizagem"
-  | "atividade_titulo"
-  | "atividade_descricao"
-  | "materiais"
-  | "organizacao_tempo_espaco"
->
-
-function camposDoItem(item: PlanejamentoItem): CamposEditaveis {
-  return {
-    objetivo_aprendizagem: item.objetivo_aprendizagem,
-    atividade_titulo: item.atividade_titulo,
-    atividade_descricao: item.atividade_descricao,
-    materiais: item.materiais,
-    organizacao_tempo_espaco: item.organizacao_tempo_espaco,
-  }
-}
 
 function formatarDiaDaSemana(dataIso: string): string {
   const data = new Date(`${dataIso}T00:00:00`)
@@ -47,32 +27,42 @@ export function DiaPlanejamentoForm({ planejamentoId }: { planejamentoId: string
   const router = useRouter()
   const queryClient = useQueryClient()
   const [indice, setIndice] = useState(0)
-  const [campos, setCampos] = useState<CamposEditaveis | null>(null)
+  const [campos, setCampos] = useState<Record<string, string> | null>(null)
 
-  const { data: itens, isLoading } = useQuery({
-    queryKey: ["planejamento-itens", planejamentoId],
-    queryFn: () => listarItensPlanejamento(planejamentoId),
+  const { data: planejamento } = useQuery({
+    queryKey: ["planejamento", planejamentoId],
+    queryFn: () => obterPlanejamento(planejamentoId),
+  })
+  const { data: dias, isLoading } = useQuery({
+    queryKey: ["planejamento-dias", planejamentoId],
+    queryFn: () => listarDias(planejamentoId),
   })
 
-  const itemAtual = itens?.[indice]
+  const colunas = planejamento ? [...planejamento.colunas].sort((a, b) => a.ordem - b.ordem) : []
+  const diaAtual = dias?.[indice]
 
   useEffect(() => {
-    if (itemAtual) setCampos(camposDoItem(itemAtual))
+    if (diaAtual) setCampos({ ...diaAtual.celulas })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemAtual?.id])
+  }, [diaAtual?.id])
 
   const { status, salvarAgora } = useAutosave(
     campos,
     async (valores) => {
-      if (!itemAtual || !valores) return
-      await atualizarItemPlanejamento(planejamentoId, itemAtual.id, valores)
-      queryClient.invalidateQueries({ queryKey: ["planejamento-itens", planejamentoId] })
+      if (!diaAtual || !valores) return
+      await atualizarDia(planejamentoId, diaAtual.id, valores)
+      queryClient.invalidateQueries({ queryKey: ["planejamento-dias", planejamentoId] })
       queryClient.invalidateQueries({ queryKey: ["planejamento", planejamentoId] })
     },
-    { chave: itemAtual?.id }
+    { chave: diaAtual?.id }
   )
 
-  if (isLoading || !itens || !campos || !itemAtual) {
+  function invalidarColunas() {
+    queryClient.invalidateQueries({ queryKey: ["planejamento", planejamentoId] })
+    queryClient.invalidateQueries({ queryKey: ["planejamento-dias", planejamentoId] })
+  }
+
+  if (isLoading || !dias || !planejamento || !campos || !diaAtual) {
     return <p className="text-sm text-muted-foreground">Carregando...</p>
   }
 
@@ -81,8 +71,8 @@ export function DiaPlanejamentoForm({ planejamentoId }: { planejamentoId: string
     setIndice(novoIndice)
   }
 
-  function atualizarCampo(campo: keyof CamposEditaveis, valor: string) {
-    setCampos((atual) => (atual ? { ...atual, [campo]: valor } : atual))
+  function atualizarCampo(colunaId: string, valor: string) {
+    setCampos((atual) => (atual ? { ...atual, [colunaId]: valor } : atual))
   }
 
   return (
@@ -91,57 +81,39 @@ export function DiaPlanejamentoForm({ planejamentoId }: { planejamentoId: string
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <p className="font-heading text-base font-medium text-foreground">
-              {formatarDiaDaSemana(itemAtual.data)}
+              {formatarDiaDaSemana(diaAtual.data)}
             </p>
-            <p className="text-sm text-muted-foreground">{formatarDataBR(itemAtual.data)}</p>
+            <p className="text-sm text-muted-foreground">{formatarDataBR(diaAtual.data)}</p>
           </div>
-          <AutosaveIndicator status={status} />
+          <div className="flex items-center gap-3">
+            <AutosaveIndicator status={status} />
+            <EditarColunasDialog
+              planejamentoId={planejamentoId}
+              colunas={colunas}
+              onMudou={invalidarColunas}
+              trigger={
+                <Button variant="outline" size="sm" className="gap-2">
+                  <SettingsIcon className="size-4" />
+                  Colunas
+                </Button>
+              }
+            />
+          </div>
         </div>
-        <ProgressoPlanejamento atual={indice + 1} total={itens.length} />
+        <ProgressoPlanejamento atual={indice + 1} total={dias.length} />
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-1.5">
-          <Label>Objetivo de aprendizagem / Espera-se que as crianças possam</Label>
-          <Textarea
-            rows={4}
-            value={campos.objetivo_aprendizagem}
-            onChange={(e) => atualizarCampo("objetivo_aprendizagem", e.target.value)}
-            placeholder="O que você pretende trabalhar hoje e o que se espera que as crianças consigam fazer..."
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label>Atividades / Estratégias / Interações</Label>
-          <Input
-            value={campos.atividade_titulo}
-            onChange={(e) => atualizarCampo("atividade_titulo", e.target.value)}
-            placeholder="Título da atividade (ex.: TEATRO COM FANTOCHE)"
-            className="font-semibold"
-          />
-          <Textarea
-            rows={5}
-            value={campos.atividade_descricao}
-            onChange={(e) => atualizarCampo("atividade_descricao", e.target.value)}
-            placeholder="Descreva como a atividade será conduzida..."
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label>Materiais</Label>
-          <Textarea
-            rows={2}
-            value={campos.materiais}
-            onChange={(e) => atualizarCampo("materiais", e.target.value)}
-            placeholder="Materiais necessários..."
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label>Organização / Tempo / Espaço</Label>
-          <Textarea
-            rows={2}
-            value={campos.organizacao_tempo_espaco}
-            onChange={(e) => atualizarCampo("organizacao_tempo_espaco", e.target.value)}
-            placeholder="Onde e quando a atividade acontecerá..."
-          />
-        </div>
+        {colunas.map((coluna) => (
+          <div key={coluna.id} className="space-y-1.5">
+            <Label>{coluna.nome}</Label>
+            <Textarea
+              rows={4}
+              value={campos[coluna.id] ?? ""}
+              onChange={(e) => atualizarCampo(coluna.id, e.target.value)}
+              placeholder={`Escreva sobre "${coluna.nome}" para este dia...`}
+            />
+          </div>
+        ))}
 
         <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-between">
           <Button
@@ -156,7 +128,7 @@ export function DiaPlanejamentoForm({ planejamentoId }: { planejamentoId: string
           <Button variant="outline" onClick={salvarAgora}>
             Salvar rascunho
           </Button>
-          {indice < itens.length - 1 ? (
+          {indice < dias.length - 1 ? (
             <Button className="gap-2" onClick={() => irPara(indice + 1)}>
               Próximo dia
               <ChevronRightIcon className="size-4" />
