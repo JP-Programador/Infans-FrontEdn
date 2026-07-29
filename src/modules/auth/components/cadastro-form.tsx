@@ -35,10 +35,15 @@ export function CadastroForm() {
   const mutation = useMutation({
     mutationFn: registrar,
     onSuccess: async (_professora, variaveis) => {
-      toast.success("Cadastro realizado! Entrando...")
-      const resultadoLogin = await login({ email: variaveis.email, senha: variaveis.senha })
-      await autenticar(resultadoLogin.access_token)
-      router.push("/dashboard")
+      toast.success("Cadastro realizado!")
+      try {
+        const resultadoLogin = await login({ email: variaveis.email, senha: variaveis.senha })
+        await autenticar(resultadoLogin.access_token)
+        router.push("/dashboard")
+      } catch {
+        toast.info("Cadastro concluído. Faça login para continuar.")
+        router.push("/login")
+      }
     },
     onError: (erro) => {
       if (erro instanceof ApiError && erro.errorCode === "EMAIL_EXISTS") {
