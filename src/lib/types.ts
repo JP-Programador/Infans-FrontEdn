@@ -84,6 +84,65 @@ export type TurmaResumo = {
   quantidade_criancas: number
 }
 
+export type StatusPlanejamento = "rascunho" | "concluido"
+
+export type Planejamento = {
+  id: string
+  professora_id: string
+  escola_id: string
+  turma_id: string
+  titulo: string
+  data_inicio: string
+  data_fim: string
+  status: StatusPlanejamento
+  created_at: string
+  updated_at: string
+}
+
+export type PlanejamentoCard = Planejamento & {
+  escola_nome: string
+  turma_nome: string
+  quantidade_dias: number
+  quantidade_dias_preenchidos: number
+}
+
+export type PlanejamentoDetalhe = PlanejamentoCard & {
+  quantidade_objetivos: number
+  materiais_citados: string[]
+}
+
+export type PlanejamentoItem = {
+  id: string
+  planejamento_id: string
+  data: string
+  objetivo_aprendizagem: string
+  expectativa_criancas: string
+  atividades_estrategias: string
+  materiais: string
+  organizacao_tempo_espaco: string
+  ordem: number
+}
+
+export type PlanejamentoVisualizacaoLinha = {
+  data: string
+  objetivo_aprendizagem: string
+  expectativa_criancas: string
+  atividades_estrategias: string
+  materiais: string
+  organizacao_tempo_espaco: string
+}
+
+export type PlanejamentoVisualizacao = {
+  titulo: string
+  escola_nome: string
+  turma_nome: string
+  professora_nome: string
+  data_inicio: string
+  data_fim: string
+  status: StatusPlanejamento
+  linhas: PlanejamentoVisualizacaoLinha[]
+}
+
 export type Dashboard = {
   quantidade_criancas: number
   quantidade_registros: number

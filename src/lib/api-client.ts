@@ -49,6 +49,34 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   return data as T
 }
 
+/** Baixa um arquivo binário (PDF/Excel) de um endpoint autenticado e dispara o
+ * download no navegador — apiFetch não serve aqui pois sempre espera JSON. */
+export async function apiDownload(path: string, nomeArquivoPadrao: string): Promise<void> {
+  const headers = new Headers()
+  const token = getToken()
+  if (token) headers.set("Authorization", `Bearer ${token}`)
+
+  const response = await fetch(`${API_URL}${path}`, { headers })
+  if (!response.ok) {
+    const data = await response.json().catch(() => null)
+    throw new ApiError(extrairMensagemDeErro(data), response.status, data?.error_code)
+  }
+
+  const blob = await response.blob()
+  const disposition = response.headers.get("Content-Disposition")
+  const match = disposition?.match(/filename="?([^"]+)"?/)
+  const nomeArquivo = match?.[1] ?? nomeArquivoPadrao
+
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = nomeArquivo
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
 function extrairMensagemDeErro(data: unknown): string {
   if (data && typeof data === "object") {
     const registro = data as Record<string, unknown>

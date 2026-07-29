@@ -16,6 +16,7 @@ import {
 import {
   DashboardIcon,
   LogoutIcon,
+  PlanningIcon,
   ReportIcon,
   SchoolIcon,
   SettingsIcon,
@@ -27,6 +28,7 @@ import { EscolaAtualProvider, useEscolaAtual } from "@/providers/escola-atual-pr
 const NAV_ITEMS: SidebarNavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: DashboardIcon },
   { href: "/escolas", label: "Escolas", icon: SchoolIcon },
+  { href: "/planejamentos", label: "Planejamentos", icon: PlanningIcon },
   { href: "/relatorios", label: "Relatórios", icon: ReportIcon },
   { href: "/configuracoes", label: "Configurações", icon: SettingsIcon },
 ]
