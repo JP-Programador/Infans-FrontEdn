@@ -17,7 +17,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </h2>
           <p className="mt-4 text-white/80">
             Organize seus registros, acompanhe o desenvolvimento das crianças e gere
-            relatórios com apoio de IA — sem nunca inventar o que você não escreveu.
+            relatórios com apoio de IA.
           </p>
         </div>
 
