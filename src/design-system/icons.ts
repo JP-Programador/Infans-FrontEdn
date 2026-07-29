@@ -15,6 +15,7 @@ export {
   ChevronDown as ChevronDownIcon,
   Clock as ClockIcon,
   Copy as CopyIcon,
+  Download as DownloadIcon,
   FileSearch as EmptySearchIcon,
   FileText as ReportIcon,
   Inbox as EmptyIcon,

@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { formatarDataBR } from "@/lib/utils"
 import { Historico } from "@/modules/registros/components/historico"
 import { RegistroForm } from "@/modules/registros/components/registro-form"
-import { ConsolidarSemestreModal } from "@/modules/relatorios/components/consolidar-semestre-modal"
+import { ConsolidarModal } from "@/modules/relatorios/components/consolidar-modal"
 
 import { obterCrianca } from "../api"
 
@@ -37,10 +37,22 @@ export function CriancaDetail({ criancaId }: { criancaId: string }) {
         title={crianca.nome}
         description={idade + (crianca.responsavel ? ` · Responsável: ${crianca.responsavel}` : "")}
         action={
-          <ConsolidarSemestreModal
-            criancaId={criancaId}
-            onUsarComoRascunho={(texto, periodo) => setRascunho({ texto, ...periodo })}
-          />
+          <div className="flex flex-wrap gap-2">
+            <ConsolidarModal
+              modo="literal"
+              criancaId={criancaId}
+              criancaNome={crianca.nome}
+              turmaId={crianca.turma_id}
+              onUsarComoRascunho={(texto, periodo) => setRascunho({ texto, ...periodo })}
+            />
+            <ConsolidarModal
+              modo="evolutivo"
+              criancaId={criancaId}
+              criancaNome={crianca.nome}
+              turmaId={crianca.turma_id}
+              onUsarComoRascunho={(texto, periodo) => setRascunho({ texto, ...periodo })}
+            />
+          </div>
         }
       />
       {rascunho && (

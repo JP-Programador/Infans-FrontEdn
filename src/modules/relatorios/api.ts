@@ -15,8 +15,21 @@ export function gerarConsolidacao(dados: GerarRelatorioInput) {
   return apiFetch<RelatorioPreview>("/api/v1/relatorios/gerar", { method: "POST", body: dados })
 }
 
-export type ConsolidarInput = { crianca_id: string; data_inicio: string; data_fim: string }
-export type ConsolidarOutput = { texto_consolidado: string; quantidade_observacoes: number }
+export type ModoConsolidacao = "literal" | "evolutivo"
+export type StatusEvolutivo = "progressao" | "manutencao" | "insuficiente"
+
+export type ConsolidarInput = {
+  crianca_id: string
+  data_inicio: string
+  data_fim: string
+  modo: ModoConsolidacao
+}
+export type ConsolidarOutput = {
+  modo: ModoConsolidacao
+  status_evolutivo: StatusEvolutivo | null
+  texto: string
+  quantidade_observacoes: number
+}
 
 export function consolidarRelatorio(dados: ConsolidarInput) {
   return apiFetch<ConsolidarOutput>("/api/v1/relatorios/consolidar", { method: "POST", body: dados })
