@@ -5,6 +5,7 @@ import type {
   PlanejamentoDetalhe,
   PlanejamentoItem,
   PlanejamentoVisualizacao,
+  RotuloTurma,
 } from "@/lib/types"
 
 export type PlanejamentoInput = {
@@ -13,14 +14,15 @@ export type PlanejamentoInput = {
   turma_id: string
   data_inicio: string
   data_fim: string
+  rotulo_turma: RotuloTurma
 }
 export type PlanejamentoUpdateInput = { titulo?: string; status?: "rascunho" | "concluido" }
 export type PlanejamentoItemUpdateInput = Partial<
   Pick<
     PlanejamentoItem,
     | "objetivo_aprendizagem"
-    | "expectativa_criancas"
-    | "atividades_estrategias"
+    | "atividade_titulo"
+    | "atividade_descricao"
     | "materiais"
     | "organizacao_tempo_espaco"
   >

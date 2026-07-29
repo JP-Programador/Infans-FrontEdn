@@ -85,6 +85,7 @@ export type TurmaResumo = {
 }
 
 export type StatusPlanejamento = "rascunho" | "concluido"
+export type RotuloTurma = "turma" | "agrupamento"
 
 export type Planejamento = {
   id: string
@@ -95,6 +96,7 @@ export type Planejamento = {
   data_inicio: string
   data_fim: string
   status: StatusPlanejamento
+  rotulo_turma: RotuloTurma
   created_at: string
   updated_at: string
 }
@@ -116,8 +118,8 @@ export type PlanejamentoItem = {
   planejamento_id: string
   data: string
   objetivo_aprendizagem: string
-  expectativa_criancas: string
-  atividades_estrategias: string
+  atividade_titulo: string
+  atividade_descricao: string
   materiais: string
   organizacao_tempo_espaco: string
   ordem: number
@@ -126,16 +128,16 @@ export type PlanejamentoItem = {
 export type PlanejamentoVisualizacaoLinha = {
   data: string
   objetivo_aprendizagem: string
-  expectativa_criancas: string
-  atividades_estrategias: string
+  atividade_titulo: string
+  atividade_descricao: string
   materiais: string
   organizacao_tempo_espaco: string
 }
 
 export type PlanejamentoVisualizacao = {
   titulo: string
-  escola_nome: string
   turma_nome: string
+  rotulo_turma: RotuloTurma
   professora_nome: string
   data_inicio: string
   data_fim: string

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ChevronLeftIcon, ChevronRightIcon } from "@/design-system/icons"
@@ -20,8 +21,8 @@ import { useAutosave } from "../use-autosave"
 type CamposEditaveis = Pick<
   PlanejamentoItem,
   | "objetivo_aprendizagem"
-  | "expectativa_criancas"
-  | "atividades_estrategias"
+  | "atividade_titulo"
+  | "atividade_descricao"
   | "materiais"
   | "organizacao_tempo_espaco"
 >
@@ -29,8 +30,8 @@ type CamposEditaveis = Pick<
 function camposDoItem(item: PlanejamentoItem): CamposEditaveis {
   return {
     objetivo_aprendizagem: item.objetivo_aprendizagem,
-    expectativa_criancas: item.expectativa_criancas,
-    atividades_estrategias: item.atividades_estrategias,
+    atividade_titulo: item.atividade_titulo,
+    atividade_descricao: item.atividade_descricao,
     materiais: item.materiais,
     organizacao_tempo_espaco: item.organizacao_tempo_espaco,
   }
@@ -100,30 +101,27 @@ export function DiaPlanejamentoForm({ planejamentoId }: { planejamentoId: string
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-1.5">
-          <Label>Objetivo de aprendizagem</Label>
+          <Label>Objetivo de aprendizagem / Espera-se que as crianças possam</Label>
           <Textarea
-            rows={3}
+            rows={4}
             value={campos.objetivo_aprendizagem}
             onChange={(e) => atualizarCampo("objetivo_aprendizagem", e.target.value)}
-            placeholder="O que você pretende trabalhar hoje..."
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label>Espera-se que as crianças possam</Label>
-          <Textarea
-            rows={3}
-            value={campos.expectativa_criancas}
-            onChange={(e) => atualizarCampo("expectativa_criancas", e.target.value)}
-            placeholder="O que se espera que as crianças consigam fazer..."
+            placeholder="O que você pretende trabalhar hoje e o que se espera que as crianças consigam fazer..."
           />
         </div>
         <div className="space-y-1.5">
           <Label>Atividades / Estratégias / Interações</Label>
+          <Input
+            value={campos.atividade_titulo}
+            onChange={(e) => atualizarCampo("atividade_titulo", e.target.value)}
+            placeholder="Título da atividade (ex.: TEATRO COM FANTOCHE)"
+            className="font-semibold"
+          />
           <Textarea
-            rows={6}
-            value={campos.atividades_estrategias}
-            onChange={(e) => atualizarCampo("atividades_estrategias", e.target.value)}
-            placeholder="Descreva a atividade e como será conduzida..."
+            rows={5}
+            value={campos.atividade_descricao}
+            onChange={(e) => atualizarCampo("atividade_descricao", e.target.value)}
+            placeholder="Descreva como a atividade será conduzida..."
           />
         </div>
         <div className="space-y-1.5">

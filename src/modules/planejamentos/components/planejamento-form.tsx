@@ -45,7 +45,14 @@ export function PlanejamentoForm() {
 
   const form = useForm<PlanejamentoFormValues>({
     resolver: zodResolver(planejamentoSchema),
-    defaultValues: { titulo: "", escola_id: "", turma_id: "", data_inicio: "", data_fim: "" },
+    defaultValues: {
+      titulo: "",
+      escola_id: "",
+      turma_id: "",
+      data_inicio: "",
+      data_fim: "",
+      rotulo_turma: "turma",
+    },
   })
 
   const mutation = useMutation({
@@ -140,6 +147,30 @@ export function PlanejamentoForm() {
                             {turma.nome}
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="rotulo_turma"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Como você chama a turma?</FormLabel>
+                  <FormControl>
+                    <Select value={field.value} onValueChange={(valor) => field.onChange(valor ?? "turma")}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue>
+                          {() => (field.value === "agrupamento" ? "Agrupamento" : "Turma")}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="turma">Turma</SelectItem>
+                        <SelectItem value="agrupamento">Agrupamento</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

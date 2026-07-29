@@ -24,7 +24,8 @@ export function PlanejamentoVisualizacao({ planejamentoId }: { planejamentoId: s
       <PageTitle
         title={visualizacao.titulo}
         description={
-          `${visualizacao.turma_nome} · ${visualizacao.escola_nome} · ` +
+          `${visualizacao.rotulo_turma === "agrupamento" ? "Agrupamento" : "Turma"}: ` +
+          `${visualizacao.turma_nome} · ` +
           `${formatarDataBR(visualizacao.data_inicio)} até ${formatarDataBR(visualizacao.data_fim)}`
         }
         action={<ExportButtons planejamentoId={planejamentoId} />}

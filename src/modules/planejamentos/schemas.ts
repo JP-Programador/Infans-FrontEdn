@@ -7,6 +7,7 @@ export const planejamentoSchema = z
     turma_id: z.string().min(1, "Selecione a turma"),
     data_inicio: z.string().min(1, "Informe a data inicial"),
     data_fim: z.string().min(1, "Informe a data final"),
+    rotulo_turma: z.enum(["turma", "agrupamento"]),
   })
   .refine((dados) => dados.data_inicio <= dados.data_fim, {
     message: "A data final deve ser depois da data inicial",
