@@ -8,6 +8,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"
 const TIMEOUT_POR_TENTATIVA_MS = 8000
 const INTERVALO_ENTRE_TENTATIVAS_MS = 3000
 const ATRASO_PARA_MOSTRAR_TELA_MS = 500
+const ATRASO_PARA_AVISO_DEMORA_MS = 45000
 
 async function pingSaude(): Promise<boolean> {
   const controller = new AbortController()
@@ -30,6 +31,7 @@ async function pingSaude(): Promise<boolean> {
 export function ApiWarmupProvider({ children }: { children: React.ReactNode }) {
   const [pronto, setPronto] = useState(false)
   const [mostrarTela, setMostrarTela] = useState(false)
+  const [demorandoDemais, setDemorandoDemais] = useState(false)
   const cancelado = useRef(false)
 
   useEffect(() => {
@@ -38,6 +40,10 @@ export function ApiWarmupProvider({ children }: { children: React.ReactNode }) {
     const mostrarTelaTimer = setTimeout(() => {
       if (!cancelado.current) setMostrarTela(true)
     }, ATRASO_PARA_MOSTRAR_TELA_MS)
+
+    const avisoDemoraTimer = setTimeout(() => {
+      if (!cancelado.current) setDemorandoDemais(true)
+    }, ATRASO_PARA_AVISO_DEMORA_MS)
 
     async function acordarApi() {
       while (!cancelado.current) {
@@ -55,6 +61,7 @@ export function ApiWarmupProvider({ children }: { children: React.ReactNode }) {
     return () => {
       cancelado.current = true
       clearTimeout(mostrarTelaTimer)
+      clearTimeout(avisoDemoraTimer)
     }
   }, [])
 
@@ -67,13 +74,23 @@ export function ApiWarmupProvider({ children }: { children: React.ReactNode }) {
       <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
         <LogoMark className="size-9 animate-pulse" />
       </div>
-      <div className="space-y-1">
-        <p className="font-medium text-foreground">Preparando o sistema...</p>
-        <p className="max-w-xs text-sm text-muted-foreground">
-          Isso pode levar até um minuto quando o Infans está sendo acessado após um
-          tempo parado.
-        </p>
-      </div>
+      {!demorandoDemais ? (
+        <div className="space-y-1">
+          <p className="font-medium text-foreground">Preparando o sistema...</p>
+          <p className="max-w-xs text-sm text-muted-foreground">
+            Isso pode levar até um minuto quando o Infans está sendo acessado após um
+            tempo parado.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-1">
+          <p className="font-medium text-foreground">Está demorando mais que o esperado</p>
+          <p className="max-w-xs text-sm text-muted-foreground">
+            O sistema pode estar passando por instabilidade. Continuamos tentando
+            conectar automaticamente — não é necessário fazer nada.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
