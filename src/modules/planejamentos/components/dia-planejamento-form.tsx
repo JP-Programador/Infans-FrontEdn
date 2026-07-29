@@ -60,12 +60,16 @@ export function DiaPlanejamentoForm({ planejamentoId }: { planejamentoId: string
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemAtual?.id])
 
-  const { status, salvarAgora } = useAutosave(campos, async (valores) => {
-    if (!itemAtual || !valores) return
-    await atualizarItemPlanejamento(planejamentoId, itemAtual.id, valores)
-    queryClient.invalidateQueries({ queryKey: ["planejamento-itens", planejamentoId] })
-    queryClient.invalidateQueries({ queryKey: ["planejamento", planejamentoId] })
-  })
+  const { status, salvarAgora } = useAutosave(
+    campos,
+    async (valores) => {
+      if (!itemAtual || !valores) return
+      await atualizarItemPlanejamento(planejamentoId, itemAtual.id, valores)
+      queryClient.invalidateQueries({ queryKey: ["planejamento-itens", planejamentoId] })
+      queryClient.invalidateQueries({ queryKey: ["planejamento", planejamentoId] })
+    },
+    { chave: itemAtual?.id }
+  )
 
   if (isLoading || !itens || !campos || !itemAtual) {
     return <p className="text-sm text-muted-foreground">Carregando...</p>
